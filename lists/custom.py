@@ -3,5 +3,9 @@
 
 def getlist():
     liststr = """
+cc98.org
+mforever78.com
+clarkok.com
+nexushd.org
 """
     return set(liststr.splitlines(False))

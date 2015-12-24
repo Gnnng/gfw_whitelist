@@ -7,5 +7,6 @@ cc98.org
 mforever78.com
 clarkok.com
 nexushd.org
+nowcoder.com
 """
     return set(liststr.splitlines(False))

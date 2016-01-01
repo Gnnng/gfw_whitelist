@@ -34,41 +34,6 @@
  */
 
 
-function isInDomains(domain_dict, host) {
-
-  var hasOwnProperty = Object.hasOwnProperty;
-
-  var suffix;
-  var pos1 = host.lastIndexOf('.');
-
-  suffix = host.substring(pos1 + 1);
-  if (suffix == "cn") {
-    return true;
-  }
-
-  var domains = domain_dict[suffix];
-  if ( domains === undefined ) {
-    return false;
-  }
-  host = host.substring(0, pos1);
-  var pos = host.lastIndexOf('.');
-
-  while(1) {
-    if (pos <= 0) {
-      if (hasOwnProperty.call(domains, host)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    suffix = host.substring(pos + 1);
-    if (hasOwnProperty.call(domains, suffix)) {
-      return true;
-    }
-    pos = host.lastIndexOf('.', pos - 1);
-  }
-}
-
 function queryProxy(app, host, port) {
   // These destinations are always connected directly and you do not need to check them here.
   // 127.0.0.1/8, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0 and localhost.
@@ -109,6 +74,40 @@ function queryProxy(app, host, port) {
   }
 
   // Bypass the whilelist domains using gfw_whitelist
+  var isInDomains = function (domain_dict, host) {
+    var hasOwnProperty = Object.hasOwnProperty;
+
+    var suffix;
+    var pos1 = host.lastIndexOf('.');
+
+    suffix = host.substring(pos1 + 1);
+    if (suffix == "cn") {
+      return true;
+    }
+
+    var domains = domain_dict[suffix];
+    if ( domains === undefined ) {
+      return false;
+    }
+    host = host.substring(0, pos1);
+    var pos = host.lastIndexOf('.');
+
+    while(1) {
+      if (pos <= 0) {
+        if (hasOwnProperty.call(domains, host)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      suffix = host.substring(pos + 1);
+      if (hasOwnProperty.call(domains, suffix)) {
+        return true;
+      }
+      pos = host.lastIndexOf('.', pos - 1);
+    }
+  }
+  
   if ( isInDomains(white_domains, host) === true ) {
     return null;
   }
